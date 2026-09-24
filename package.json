@@ -33,7 +33,11 @@
   ],
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "oxfmt": "^0.70.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "sharp": "^0.35.4"
   }
 }
