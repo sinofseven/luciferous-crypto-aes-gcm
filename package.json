@@ -1,0 +1,39 @@
+{
+  "name": "web-crypto-aes-gcm",
+  "version": "0.0.1",
+  "description": "AES-GCM key generation, encryption and decryption on top of the Web Crypto API. Works on Cloudflare Workers, browsers and Node.js.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "aes-gcm",
+    "webcrypto",
+    "encryption",
+    "cloudflare-workers"
+  ],
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}
