@@ -7,12 +7,12 @@ interface Uint8ArrayFromBase64Options extends Uint8ArrayBase64Options {
   lastChunkHandling?: "loose" | "strict" | "stop-before-partial";
 }
 
-interface Uint8ArrayWithBase64 extends Uint8Array {
+interface Uint8ArrayWithBase64 extends Uint8Array<ArrayBuffer> {
   toBase64(options?: Uint8ArrayBase64Options): string;
 }
 
 interface Uint8ArrayConstructorWithBase64 extends Uint8ArrayConstructor {
-  fromBase64(base64: string, options?: Uint8ArrayFromBase64Options): Uint8Array;
+  fromBase64(base64: string, options?: Uint8ArrayFromBase64Options): Uint8Array<ArrayBuffer>;
 }
 
 const encoder = new TextEncoder();
@@ -57,7 +57,7 @@ export type PropsEncrypt = {
 
 type OutputEncryptByApi = {
   ciphertext: ArrayBuffer;
-  iv: Uint8Array;
+  iv: Uint8Array<ArrayBuffer>;
 };
 
 async function encryptByApi({ plaintext, key }: PropsEncrypt): Promise<OutputEncryptByApi> {
@@ -74,7 +74,7 @@ async function encryptByApi({ plaintext, key }: PropsEncrypt): Promise<OutputEnc
 type PropsDecryptByApi = {
   ciphertext: BufferSource;
   key: CryptoKey;
-  iv: Uint8Array;
+  iv: Uint8Array<ArrayBuffer>;
 };
 
 async function decryptByApi({ ciphertext, key, iv }: PropsDecryptByApi): Promise<string> {
@@ -108,6 +108,9 @@ export type PropsDecrypt = {
 
 export async function decrypt({ encryptedText, key }: PropsDecrypt): Promise<string> {
   const [base64Iv, base64Ciphertext] = encryptedText.split(":");
+  if (base64Iv === undefined || base64Ciphertext === undefined) {
+    throw new Error("Invalid encrypted text format");
+  }
   const iv = (Uint8Array as Uint8ArrayConstructorWithBase64).fromBase64(base64Iv);
   const ciphertext = (Uint8Array as Uint8ArrayConstructorWithBase64).fromBase64(base64Ciphertext);
   return decryptByApi({ ciphertext, iv, key });
