@@ -8,24 +8,15 @@ describe("test runtime", () => {
   });
 
   it("exposes the Web Crypto API the library will build on", async () => {
-    const key = await crypto.subtle.generateKey(
-      { name: "AES-GCM", length: 256 },
-      true,
-      ["encrypt", "decrypt"],
-    );
+    const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, [
+      "encrypt",
+      "decrypt",
+    ]);
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const plaintext = new TextEncoder().encode("hello");
 
-    const ciphertext = await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv },
-      key,
-      plaintext,
-    );
-    const roundTripped = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv },
-      key,
-      ciphertext,
-    );
+    const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, plaintext);
+    const roundTripped = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
 
     expect(new TextDecoder().decode(roundTripped)).toBe("hello");
   });

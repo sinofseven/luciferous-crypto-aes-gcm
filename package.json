@@ -1,8 +1,17 @@
 {
-  "name": "@luciferous/aes-gcm",
+  "name": "@luciferous/crypto-aes-gcm",
   "version": "0.0.1",
   "description": "AES-GCM key generation, encryption and decryption on top of the Web Crypto API. Works on Cloudflare Workers, browsers and Node.js.",
+  "keywords": [
+    "aes-gcm",
+    "cloudflare-workers",
+    "encryption",
+    "webcrypto"
+  ],
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -12,11 +21,8 @@
     },
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist"
-  ],
-  "engines": {
-    "node": ">=26"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc",
@@ -25,19 +31,17 @@
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
   },
-  "keywords": [
-    "aes-gcm",
-    "webcrypto",
-    "encryption",
-    "cloudflare-workers"
-  ],
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "oxfmt": "^0.70.0",
+    "oxlint": "^1.85.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   },
   "overrides": {
     "sharp": "^0.35.4"
+  },
+  "engines": {
+    "node": ">=26"
   }
 }
