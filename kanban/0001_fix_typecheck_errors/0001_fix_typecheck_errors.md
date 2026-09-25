@@ -1,12 +1,15 @@
 # typecheckエラーの修正
 
 ## 目的
+
 typecheckでエラーが出てしまっている。テストを書く以前の問題なので先に修正したい。
 
 ## 要望
+
 `npm run typecheck` でエラーが出た。修正してほしい。
 
 ## エラー
+
 ```
 
 > @luciferous/crypto-aes-gcm@0.0.1 typecheck

@@ -8,6 +8,7 @@
 `npm run typecheck` でエラーが出た。修正してほしい。
 
 エラー:
+
 ```
 > @luciferous/crypto-aes-gcm@0.0.1 typecheck
 > tsc -p tsconfig.test.json
@@ -63,12 +64,14 @@ export type { PropsEncrypt, PropsDecrypt } from "./crypto.ts";
 ### `tsconfig.json` / `tsconfig.test.json` の内容確認
 
 `tsconfig.json`:
+
 - `module: "NodeNext"`, `moduleResolution: "NodeNext"`
 - `rootDir: "src"`, `outDir: "dist"`, `declaration: true` など、ビルド用の設定（`noEmit` は指定されていない = 実際にファイルを出力する）
 - `strict: true`, `noUncheckedIndexedAccess: true`, `noImplicitOverride: true`, `exactOptionalPropertyTypes: true` など厳格な設定
 - `allowImportingTsExtensions` は未設定だった
 
 `tsconfig.test.json`:
+
 - `tsconfig.json` を `extends`
 - `rootDir: "."`, `noEmit: true` に上書き（コメントによると「test/ ディレクトリと設定ファイルを含めると rootDir: "src" の範囲外になるため、型検査専用として rootDir を広げて noEmit にしている」との説明あり）
 - `include: ["src", "test", "vitest.config.ts"]`

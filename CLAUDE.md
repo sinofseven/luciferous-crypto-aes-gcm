@@ -8,24 +8,24 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## コマンド
 
-| 目的 | コマンド |
-| --- | --- |
-| ビルド (`dist/` 生成) | `npm run build` |
-| 型検査 | `npm run typecheck` |
-| テスト | `npm test` / `npm run test:watch` |
-| 単一ファイルのテスト | `npx vitest run test/runtime.test.ts` |
-| 単一ケースのテスト | `npx vitest run -t "runs inside workerd"` |
-| Lint | `npm run lint` |
-| フォーマット | `npm run format` |
+| 目的                  | コマンド                                  |
+| --------------------- | ----------------------------------------- |
+| ビルド (`dist/` 生成) | `npm run build`                           |
+| 型検査                | `npm run typecheck`                       |
+| テスト                | `npm test` / `npm run test:watch`         |
+| 単一ファイルのテスト  | `npx vitest run test/runtime.test.ts`     |
+| 単一ケースのテスト    | `npx vitest run -t "runs inside workerd"` |
+| Lint                  | `npm run lint`                            |
+| フォーマット          | `npm run format`                          |
 
 ### `build` と `typecheck` のスコープが違う
 
 - `npm run build` は `tsc`（ベースの `tsconfig.json`）で、`include: ["src"]` のみ。`dist/` へ出力する。
 - `npm run typecheck` は `tsc -p tsconfig.test.json` で、`src` / `test` / `vitest.config.ts` を `noEmit` で検査する。**`test/` と設定ファイルの型エラーは `typecheck` でしか検出できない**ので、テストを触ったら必ずこちらを回す。
 
-### oxlint の警告はノイズ
+### oxlint は warning も含めて 0 件が基準
 
-`.oxlintrc.json` は `correctness` / `suspicious` を error、`perf` / `style` を warn にしている。既存コードには `one-var`、`sort-keys`、`no-named-export`、`func-style`、`consistent-type-definitions` などの style 系 warning が多数残っている。**error のみがゲート**で、warning は既存の状態。自分の変更が出したものでない warning を追いかけないこと。
+`.oxlintrc.json` は `correctness` / `suspicious` を error、`perf` / `style` を warn にしつつ、`rules` / `overrides` で個別ルールを上書きしている（`one-var` は常に分離、`func-style` は宣言のみ許可、`import/no-named-export` は無効化し `import/no-default-export` を有効化、`typescript/consistent-type-definitions` は `type` を優先、`vitest/no-importing-vitest-globals` と `capitalized-comments` は無効化、`test/**` は `no-magic-numbers` を許容、`vitest.config.ts` は default export を許容）。**現在 `npm run lint` は warning/error ともに 0 件が正常な状態**なので、自分の変更が新規に warning を出していないか常に確認すること。
 
 ## アーキテクチャと設計上の制約
 

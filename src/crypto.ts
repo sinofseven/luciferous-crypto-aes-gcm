@@ -1,30 +1,41 @@
-interface Uint8ArrayBase64Options {
+type Uint8ArrayBase64Options = {
   alphabet?: "base64" | "base64url";
   omitPadding?: boolean;
-}
+};
 
-interface Uint8ArrayFromBase64Options extends Uint8ArrayBase64Options {
+type Uint8ArrayFromBase64Options = Uint8ArrayBase64Options & {
   lastChunkHandling?: "loose" | "strict" | "stop-before-partial";
-}
+};
 
+// oxlint-disable-next-line typescript/consistent-type-definitions
 interface Uint8ArrayWithBase64 extends Uint8Array<ArrayBuffer> {
-  toBase64(options?: Uint8ArrayBase64Options): string;
+  toBase64: (options?: Uint8ArrayBase64Options) => string;
 }
 
+// oxlint-disable-next-line typescript/consistent-type-definitions
 interface Uint8ArrayConstructorWithBase64 extends Uint8ArrayConstructor {
-  fromBase64(base64: string, options?: Uint8ArrayFromBase64Options): Uint8Array<ArrayBuffer>;
+  fromBase64: (base64: string, options?: Uint8ArrayFromBase64Options) => Uint8Array<ArrayBuffer>;
 }
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const algorithmName = "AES-GCM";
 const lengthKey = 256;
+const lengthIv = 12;
+
+type AllKeyUsages =
+  | "encrypt"
+  | "decrypt"
+  | "sign"
+  | "verify"
+  | "deriveKey"
+  | "deriveBits"
+  | "wrapKey"
+  | "unwrapKey";
 
 type KeyConfig = {
   extractable?: boolean;
-  keyUsages?: Array<
-    "encrypt" | "decrypt" | "sign" | "verify" | "deriveKey" | "deriveBits" | "wrapKey" | "unwrapKey"
-  >;
+  keyUsages?: AllKeyUsages[];
 };
 
 function generateKeyByApi(props?: KeyConfig): Promise<CryptoKey> {
@@ -32,8 +43,8 @@ function generateKeyByApi(props?: KeyConfig): Promise<CryptoKey> {
   const keyUsage = props?.keyUsages ?? ["encrypt", "decrypt"];
   return crypto.subtle.generateKey(
     {
-      name: algorithmName,
       length: lengthKey,
+      name: algorithmName,
     },
     extractable,
     keyUsage,
@@ -50,7 +61,7 @@ function importKeyByApi(raw: BufferSource, config?: KeyConfig): Promise<CryptoKe
   return crypto.subtle.importKey("raw", raw, { name: algorithmName }, extractable, keyUsage);
 }
 
-export type PropsEncrypt = {
+type PropsEncrypt = {
   plaintext: string;
   key: CryptoKey;
 };
@@ -61,10 +72,10 @@ type OutputEncryptByApi = {
 };
 
 async function encryptByApi({ plaintext, key }: PropsEncrypt): Promise<OutputEncryptByApi> {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const iv = crypto.getRandomValues(new Uint8Array(lengthIv));
 
   const ciphertext = await crypto.subtle.encrypt(
-    { name: algorithmName, iv },
+    { iv, name: algorithmName },
     key,
     encoder.encode(plaintext),
   );
@@ -78,35 +89,35 @@ type PropsDecryptByApi = {
 };
 
 async function decryptByApi({ ciphertext, key, iv }: PropsDecryptByApi): Promise<string> {
-  const raw = await crypto.subtle.decrypt({ name: algorithmName, iv }, key, ciphertext);
+  const raw = await crypto.subtle.decrypt({ iv, name: algorithmName }, key, ciphertext);
 
   return decoder.decode(raw);
 }
 
-export async function generateKey(): Promise<string> {
+async function generateKey(): Promise<string> {
   const key = await generateKeyByApi();
   const raw = await exportKeyByApi(key);
   return (new Uint8Array(raw) as Uint8ArrayWithBase64).toBase64();
 }
 
-export async function importKey(rawKey: string): Promise<CryptoKey> {
+async function importKey(rawKey: string): Promise<CryptoKey> {
   const raw = (Uint8Array as Uint8ArrayConstructorWithBase64).fromBase64(rawKey);
   return importKeyByApi(raw, { extractable: false });
 }
 
-export async function encrypt(props: PropsEncrypt): Promise<string> {
+async function encrypt(props: PropsEncrypt): Promise<string> {
   const resp = await encryptByApi(props);
   const vector = (resp.iv as Uint8ArrayWithBase64).toBase64();
   const data = (new Uint8Array(resp.ciphertext) as Uint8ArrayWithBase64).toBase64();
   return `${vector}:${data}`;
 }
 
-export type PropsDecrypt = {
+type PropsDecrypt = {
   encryptedText: string;
   key: CryptoKey;
 };
 
-export async function decrypt({ encryptedText, key }: PropsDecrypt): Promise<string> {
+async function decrypt({ encryptedText, key }: PropsDecrypt): Promise<string> {
   const [base64Iv, base64Ciphertext] = encryptedText.split(":");
   if (base64Iv === undefined || base64Ciphertext === undefined) {
     throw new Error("Invalid encrypted text format");
@@ -115,3 +126,6 @@ export async function decrypt({ encryptedText, key }: PropsDecrypt): Promise<str
   const ciphertext = (Uint8Array as Uint8ArrayConstructorWithBase64).fromBase64(base64Ciphertext);
   return decryptByApi({ ciphertext, iv, key });
 }
+
+export { generateKey, importKey, encrypt, decrypt };
+export type { PropsEncrypt, PropsDecrypt };

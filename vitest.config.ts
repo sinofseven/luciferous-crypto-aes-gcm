@@ -14,6 +14,8 @@ export default defineConfig({
     }),
   ],
   test: {
+    // vitest のヘルパーは明示 import する運用のため globals は常に false。
+    globals: false,
     include: ["test/**/*.test.ts"],
   },
 });
