@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+const isWorkerRuntime = typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+
 describe("test runtime", () => {
-  it("runs inside workerd, not Node", () => {
+  (isWorkerRuntime ? it : it.skip)("runs inside workerd, not Node", () => {
     expect.hasAssertions();
     // crypto.subtle だけでは Node でも通ってしまうため、
     // 実際に Workers ランタイムで動いていることをここで確かめる。

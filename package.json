@@ -27,7 +27,9 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc -p tsconfig.test.json",
-    "test": "vitest run",
+    "test": "npm run test:node && npm run test:workers",
+    "test:node": "vitest run -c vitest.config.node.ts",
+    "test:workers": "vitest run -c vitest.config.ts",
     "test:watch": "vitest",
     "prepublishOnly": "npm run build",
     "format": "oxfmt",
