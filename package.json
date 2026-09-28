@@ -12,6 +12,18 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sinofseven/luciferous-crypto-aes-gcm.git"
+  },
+  "homepage": "https://github.com/sinofseven/luciferous-crypto-aes-gcm",
+  "bugs": {
+    "url": "https://github.com/sinofseven/luciferous-crypto-aes-gcm/issues"
+  },
+  "author": {
+    "name": "sinofseven",
+    "url": "https://github.com/sinofseven"
+  },
   "type": "module",
   "sideEffects": false,
   "exports": {
