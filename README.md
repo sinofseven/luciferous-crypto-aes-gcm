@@ -63,13 +63,13 @@ type PropsDecrypt = {
 
 ## 開発
 
-| 目的                  | コマンド             |
-| --------------------- | -------------------- |
-| ビルド (`dist/` 生成) | `npm run build`      |
-| 型検査                | `npm run typecheck`  |
-| テスト                | `npm test`           |
-| Lint                  | `npm run lint`       |
-| フォーマット          | `npm run format`     |
+| 目的                  | コマンド            |
+| --------------------- | ------------------- |
+| ビルド (`dist/` 生成) | `npm run build`     |
+| 型検査                | `npm run typecheck` |
+| テスト                | `npm test`          |
+| Lint                  | `npm run lint`      |
+| フォーマット          | `npm run format`    |
 
 詳細は `CLAUDE.md` を参照してください。
 

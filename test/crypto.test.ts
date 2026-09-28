@@ -1,5 +1,6 @@
-import { decrypt, encrypt, generateKey, importKey } from "../src/index.ts";
 import { describe, expect, it } from "vitest";
+
+import { decrypt, encrypt, generateKey, importKey } from "../src/index.ts";
 
 function createImportedKey(): Promise<CryptoKey> {
   return generateKey().then((base64Key) => importKey(base64Key));

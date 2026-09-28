@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-const isWorkerRuntime = typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+const isWorkerRuntime =
+  typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
 
 describe("test runtime", () => {
   (isWorkerRuntime ? it : it.skip)("runs inside workerd, not Node", () => {
