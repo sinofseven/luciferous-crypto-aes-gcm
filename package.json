@@ -1,6 +1,6 @@
 {
   "name": "@luciferous/crypto-aes-gcm",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "AES-GCM key generation, encryption and decryption on top of the Web Crypto API. Works on Cloudflare Workers and Node.js.",
   "keywords": [
     "aes-gcm",
